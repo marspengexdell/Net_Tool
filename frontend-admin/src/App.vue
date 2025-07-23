@@ -4,7 +4,32 @@
     <!-- 侧边栏 -->
     <el-aside width="200px" class="app-aside">
       <div class="logo">Layered CMS</div>
+
       <Sidebar />
+
+      <!-- 导航菜单 -->
+      <el-menu
+        router
+        :default-active="activeMenu"
+        active-text-color="#ffd04b"
+        background-color="#545c64"
+        class="el-menu-vertical-demo"
+        text-color="#fff"
+      >
+        <el-menu-item index="/settings">
+          <el-icon><setting /></el-icon>
+          <span>全局设置</span>
+        </el-menu-item>
+        <el-menu-item index="/layers">
+          <el-icon><Grid /></el-icon>
+          <span>层级管理</span>
+        </el-menu-item>
+        <el-menu-item index="/menu">
+          <el-icon><List /></el-icon>
+          <span>菜单管理</span>
+        </el-menu-item>
+      </el-menu>
+
     </el-aside>
 
     <el-container>
@@ -35,7 +60,15 @@
 </template>
 
 <script setup>
+
 import Sidebar from './components/layout/Sidebar.vue'
+
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const activeMenu = computed(() => route.path);
+
 </script>
 
 <style>

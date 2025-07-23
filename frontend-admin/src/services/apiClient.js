@@ -13,26 +13,27 @@ const apiClient = axios.create({
   },
 });
 
-// 你可以在这里添加请求拦截器，例如，在每个请求中附加认证 token
-// apiClient.interceptors.request.use(config => {
-//   const token = localStorage.getItem('token');
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// }, error => {
-//   return Promise.reject(error);
-// });
+// 在每个请求中附加认证 token
+apiClient.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
 
-// 你也可以添加响应拦截器，用于统一处理错误
-// apiClient.interceptors.response.use(response => {
-//   return response;
-// }, error => {
-//   // 例如，处理 401 未授权错误，跳转到登录页
-//   if (error.response.status === 401) {
-//     // router.push('/login');
-//   }
-//   return Promise.reject(error);
-// });
+// 统一处理错误，如未授权时清除 token
+apiClient.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token');
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default apiClient;
