@@ -4,6 +4,12 @@
       <template #header>
         <div class="card-header">
           <span>表单管理</span>
+
+        </div>
+      </template>
+      <p>这里将放置用于管理自定义表单的内容。</p>
+    </el-card>
+
           <el-button type="primary" :icon="Plus" @click="handleCreate">新建表单</el-button>
         </div>
       </template>
@@ -46,10 +52,14 @@
       @close="handleFormClose"
       @submit="handleFormSubmit"
     />
+
   </div>
 </template>
 
 <script setup>
+
+// 未来可在此添加表单管理逻辑
+
 import { ref, onMounted } from 'vue';
 import { Plus } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
@@ -158,6 +168,7 @@ const formatDateTime = (isoString) => {
 onMounted(() => {
   fetchForms();
 });
+
 </script>
 
 <style scoped>
@@ -169,7 +180,10 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
 }
+
+
 .error-alert {
   margin-bottom: 20px;
 }
+
 </style>

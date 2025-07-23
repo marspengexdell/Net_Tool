@@ -13,7 +13,11 @@ import FormManager from '../views/FormManager.vue';
 // 下面我们先导入，然后立即创建这两个占位文件
 import GlobalSettings from '../views/GlobalSettings.vue';
 import MenuManager from '../views/MenuManager.vue';
+
+import FormManager from '../views/FormManager.vue';
+
 import Login from '../views/Login.vue';
+
 
 // 定义路由规则
 const routes = [
@@ -46,11 +50,25 @@ const routes = [
     meta: { title: '菜单管理', icon: 'List' }
   },
   {
+
+    path: '/forms',
+    name: 'FormManager',
+    component: FormManager,
+    meta: { title: '表单管理', icon: 'Edit' }
+  },
+  // 未来可以添加登录页等其他路由
+  // {
+  //   path: '/login',
+  //   name: 'Login',
+  //   component: () => import('../views/Login.vue')
+  // }
+
     path: '/login',
     name: 'Login',
     component: Login,
     meta: { title: '登录' }
   }
+
 ];
 
 // 创建路由实例

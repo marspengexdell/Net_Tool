@@ -36,6 +36,7 @@
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="scope">
             <el-button size="small" type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button size="small" @click="handleEditContent(scope.row)">内容</el-button>
             <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -49,6 +50,12 @@
       @close="handleFormClose"
       @submit="handleFormSubmit"
     />
+    <layer-card
+      :visible="isEditorVisible"
+      :layer="editingContentLayer"
+      @close="handleEditorClose"
+      @save="handleEditorSave"
+    />
   </div>
 </template>
 
@@ -60,6 +67,7 @@ import { getLayers, deleteLayer, createLayer, updateLayer } from '../services/la
 
 // 导入表单组件
 import LayerForm from '../components/LayerForm.vue';
+import LayerCard from '../components/LayerEditor/LayerCard.vue';
 
 // 响应式状态
 const loading = ref(true);
@@ -67,6 +75,8 @@ const tableData = ref([]);
 const error = ref(null);
 const isFormVisible = ref(false);
 const editingLayer = ref(null);
+const isEditorVisible = ref(false);
+const editingContentLayer = ref(null);
 
 // --- 表单操作 ---
 const handleCreate = () => {
@@ -77,6 +87,35 @@ const handleCreate = () => {
 const handleEdit = (row) => {
   editingLayer.value = { ...row }; // 传递副本以避免直接修改表格数据
   isFormVisible.value = true;
+};
+
+const handleEditContent = (row) => {
+  editingContentLayer.value = { ...row };
+  isEditorVisible.value = true;
+};
+
+const handleEditorSave = async (blocks) => {
+  if (!editingContentLayer.value) return;
+  const payload = { ...editingContentLayer.value, contentBlocks: blocks };
+  try {
+    const response = await updateLayer(editingContentLayer.value._id, payload);
+    if (response.data && response.data.success) {
+      ElMessage.success('内容已保存');
+      fetchLayers();
+    } else {
+      throw new Error(response.data.message || '保存失败');
+    }
+  } catch (err) {
+    console.error(err);
+    ElMessage.error(err.message || '保存时发生错误');
+  }
+  isEditorVisible.value = false;
+  editingContentLayer.value = null;
+};
+
+const handleEditorClose = () => {
+  isEditorVisible.value = false;
+  editingContentLayer.value = null;
 };
 
 const handleFormClose = () => {

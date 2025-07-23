@@ -4,6 +4,9 @@
     <!-- 侧边栏 -->
     <el-aside width="200px" class="app-aside">
       <div class="logo">Layered CMS</div>
+
+      <Sidebar />
+
       <!-- 导航菜单 -->
       <el-menu
         router
@@ -26,6 +29,7 @@
           <span>菜单管理</span>
         </el-menu-item>
       </el-menu>
+
     </el-aside>
 
     <el-container>
@@ -56,11 +60,15 @@
 </template>
 
 <script setup>
+
+import Sidebar from './components/layout/Sidebar.vue'
+
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const activeMenu = computed(() => route.path);
+
 </script>
 
 <style>
