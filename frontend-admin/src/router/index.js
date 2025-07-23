@@ -7,6 +7,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 // 导入页面组件
 // LayerManager.vue 已经创建
 import LayerManager from '../views/LayerManager.vue';
+import FormManager from '../views/FormManager.vue';
 
 // 我们需要为其他菜单项创建对应的页面组件
 // 下面我们先导入，然后立即创建这两个占位文件
@@ -25,6 +26,12 @@ const routes = [
     name: 'LayerManager',
     component: LayerManager,
     meta: { title: '层级管理', icon: 'Grid' } // meta 用于侧边栏生成
+  },
+  {
+    path: '/forms',
+    name: 'FormManager',
+    component: FormManager,
+    meta: { title: '表单管理', icon: 'Tickets' }
   },
   {
     path: '/settings',

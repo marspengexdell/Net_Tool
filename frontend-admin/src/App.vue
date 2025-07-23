@@ -6,22 +6,22 @@
       <div class="logo">Layered CMS</div>
       <!-- 导航菜单 -->
       <el-menu
+        router
+        :default-active="activeMenu"
         active-text-color="#ffd04b"
         background-color="#545c64"
         class="el-menu-vertical-demo"
-        default-active="2"
         text-color="#fff"
       >
-        <!-- 之后这里会用 v-for 根据路由动态生成 -->
-        <el-menu-item index="1">
+        <el-menu-item index="/settings">
           <el-icon><setting /></el-icon>
           <span>全局设置</span>
         </el-menu-item>
-        <el-menu-item index="2">
+        <el-menu-item index="/layers">
           <el-icon><Grid /></el-icon>
           <span>层级管理</span>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="/menu">
           <el-icon><List /></el-icon>
           <span>菜单管理</span>
         </el-menu-item>
@@ -49,20 +49,18 @@
 
       <!-- 主内容区 -->
       <el-main class="app-main">
-        <!-- 
-          这里是将来路由切换时，不同页面组件显示的地方。
-          现在我们先放一个占位符。
-        -->
-        <h2>欢迎使用 Layered Layout CMS!</h2>
-        <p>请从左侧菜单选择一项开始管理。</p>
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script setup>
-// Script setup is used for Vue 3 Composition API.
-// We can define component logic here in the future.
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const activeMenu = computed(() => route.path);
 </script>
 
 <style>
