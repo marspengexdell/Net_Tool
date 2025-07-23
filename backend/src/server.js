@@ -11,7 +11,8 @@ import connectDB from './config/db.js';
 import layersRoutes from './api/layers.routes.js';
 import settingsRoutes from './api/settings.routes.js'; // 新增：导入 settings 路由
 // (未来可以导入更多路由)
-// import menuRoutes from './api/menu.routes.js';
+import menuRoutes from './api/menu.routes.js';
+import publicRoutes from './api/public.routes.js';
 
 // --- 初始化 ---
 // 加载 .env 文件中的环境变量
@@ -36,7 +37,8 @@ app.use('/api/layers', layersRoutes);
 // 新增：当请求路径以 /api/settings 开头时，使用 settingsRoutes 处理
 app.use('/api/settings', settingsRoutes);
 // (未来可以挂载更多路由)
-// app.use('/api/menu', menuRoutes);
+app.use('/api/menu', menuRoutes);
+app.use('/api/public', publicRoutes);
 
 
 // --- 错误处理中间件 (可选，但推荐) ---
