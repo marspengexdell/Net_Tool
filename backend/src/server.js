@@ -10,6 +10,7 @@ import connectDB from './config/db.js';
 // 导入路由文件
 import layersRoutes from './api/layers.routes.js';
 import settingsRoutes from './api/settings.routes.js'; // 新增：导入 settings 路由
+import formsRoutes from './api/forms.routes.js';
 // (未来可以导入更多路由)
 // import menuRoutes from './api/menu.routes.js';
 
@@ -35,6 +36,8 @@ app.use(express.json());
 app.use('/api/layers', layersRoutes);
 // 新增：当请求路径以 /api/settings 开头时，使用 settingsRoutes 处理
 app.use('/api/settings', settingsRoutes);
+// 表单相关路由
+app.use('/api/forms', formsRoutes);
 // (未来可以挂载更多路由)
 // app.use('/api/menu', menuRoutes);
 
