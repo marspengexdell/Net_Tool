@@ -12,6 +12,7 @@ import LayerManager from '../views/LayerManager.vue';
 // 下面我们先导入，然后立即创建这两个占位文件
 import GlobalSettings from '../views/GlobalSettings.vue';
 import MenuManager from '../views/MenuManager.vue';
+import FormManager from '../views/FormManager.vue';
 
 // 定义路由规则
 const routes = [
@@ -36,6 +37,12 @@ const routes = [
     name: 'MenuManager',
     component: MenuManager,
     meta: { title: '菜单管理', icon: 'List' }
+  },
+  {
+    path: '/forms',
+    name: 'FormManager',
+    component: FormManager,
+    meta: { title: '表单管理', icon: 'Edit' }
   },
   // 未来可以添加登录页等其他路由
   // {
