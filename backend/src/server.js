@@ -13,6 +13,9 @@ import settingsRoutes from './api/settings.routes.js'; // 新增：导入 settin
 // (未来可以导入更多路由)
 import menuRoutes from './api/menu.routes.js';
 import publicRoutes from './api/public.routes.js';
+import authRoutes from './api/auth.routes.js';
+
+import { protect } from './middleware/auth.middleware.js';
 
 // --- 初始化 ---
 // 加载 .env 文件中的环境变量
@@ -32,12 +35,14 @@ app.use(cors());
 app.use(express.json());
 
 // --- API 路由 ---
+app.use('/api/auth', authRoutes);
+
 // 当请求路径以 /api/layers 开头时，使用 layersRoutes 处理
-app.use('/api/layers', layersRoutes);
+app.use('/api/layers', protect, layersRoutes);
 // 新增：当请求路径以 /api/settings 开头时，使用 settingsRoutes 处理
-app.use('/api/settings', settingsRoutes);
+app.use('/api/settings', protect, settingsRoutes);
 // (未来可以挂载更多路由)
-app.use('/api/menu', menuRoutes);
+app.use('/api/menu', protect, menuRoutes);
 app.use('/api/public', publicRoutes);
 
 
