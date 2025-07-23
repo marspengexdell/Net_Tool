@@ -10,7 +10,7 @@
           <el-input v-model="form.password" type="password" autocomplete="current-password" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSubmit" :loading="loading">登录</el-button>
+          <el-button type="primary" style="width: 100%;" @click="handleSubmit" :loading="loading">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -21,16 +21,25 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import apiClient from '../services/apiClient';
-import { useAuthStore } from '../store/modules/auth';
+// 注意：这些文件需要被正确创建和配置才能使登录功能正常工作
+// import apiClient from '../services/apiClient';
+// import { useAuthStore } from '../store/modules/auth';
 
 const router = useRouter();
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 const form = reactive({ email: '', password: '' });
 const loading = ref(false);
 
 const handleSubmit = async () => {
   loading.value = true;
+  ElMessage.info('登录功能需要后端和状态管理支持。');
+  // 模拟一个延时
+  setTimeout(() => {
+    loading.value = false;
+  }, 1500);
+
+  // 真实的API调用逻辑（暂时注释）
+  /*
   try {
     const res = await apiClient.post('/auth/login', form);
     if (res.data && res.data.token) {
@@ -43,6 +52,7 @@ const handleSubmit = async () => {
   } finally {
     loading.value = false;
   }
+  */
 };
 </script>
 
@@ -51,7 +61,9 @@ const handleSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%; /* 调整为100%以适应主内容区 */
+  width: 100%;
+  box-sizing: border-box;
 }
 .login-card {
   width: 400px;

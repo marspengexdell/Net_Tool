@@ -13,8 +13,8 @@ import 'element-plus/dist/index.css';
 // 引入 Element Plus 的图标库
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
-// 引入路由 (我们稍后会创建 router/index.js)
-import router from './router'; // 取消注释，引入路由
+// 引入路由
+import router from './router';
 
 // 引入状态管理 Pinia
 import { createPinia } from 'pinia';
@@ -29,8 +29,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 // 使用插件
 app.use(ElementPlus);
-app.use(router); // 取消注释，启用路由
-app.use(createPinia());
+app.use(router);
+app.use(createPinia()); // 启用 Pinia
 
 // 将应用挂载到 public/index.html 文件中 id 为 'app' 的元素上
 app.mount('#app');

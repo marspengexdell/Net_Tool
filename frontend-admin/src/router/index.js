@@ -4,20 +4,12 @@
  */
 import { createRouter, createWebHistory } from 'vue-router';
 
-// 导入页面组件
-// LayerManager.vue 已经创建
+// 导入所有页面组件
 import LayerManager from '../views/LayerManager.vue';
-import FormManager from '../views/FormManager.vue';
-
-// 我们需要为其他菜单项创建对应的页面组件
-// 下面我们先导入，然后立即创建这两个占位文件
 import GlobalSettings from '../views/GlobalSettings.vue';
 import MenuManager from '../views/MenuManager.vue';
-
 import FormManager from '../views/FormManager.vue';
-
 import Login from '../views/Login.vue';
-
 
 // 定义路由规则
 const routes = [
@@ -32,12 +24,6 @@ const routes = [
     meta: { title: '层级管理', icon: 'Grid' } // meta 用于侧边栏生成
   },
   {
-    path: '/forms',
-    name: 'FormManager',
-    component: FormManager,
-    meta: { title: '表单管理', icon: 'Tickets' }
-  },
-  {
     path: '/settings',
     name: 'GlobalSettings',
     component: GlobalSettings,
@@ -50,25 +36,18 @@ const routes = [
     meta: { title: '菜单管理', icon: 'List' }
   },
   {
-
     path: '/forms',
     name: 'FormManager',
     component: FormManager,
-    meta: { title: '表单管理', icon: 'Edit' }
+    meta: { title: '表单管理', icon: 'Tickets' }
   },
-  // 未来可以添加登录页等其他路由
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: () => import('../views/Login.vue')
-  // }
-
+  // 添加登录页路由
+  {
     path: '/login',
     name: 'Login',
     component: Login,
-    meta: { title: '登录' }
+    meta: { title: '登录', hideInMenu: true } // hideInMenu 是一个自定义标记，用于不在侧边栏显示
   }
-
 ];
 
 // 创建路由实例

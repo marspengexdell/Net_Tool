@@ -4,16 +4,10 @@
       <template #header>
         <div class="card-header">
           <span>表单管理</span>
-
-        </div>
-      </template>
-      <p>这里将放置用于管理自定义表单的内容。</p>
-    </el-card>
-
           <el-button type="primary" :icon="Plus" @click="handleCreate">新建表单</el-button>
         </div>
       </template>
-
+      
       <el-alert
         v-if="error"
         :title="'数据加载失败: ' + error"
@@ -46,25 +40,25 @@
       </el-table>
     </el-card>
 
-    <form-form
-      :visible="isFormVisible"
-      :initial-data="editingForm"
-      @close="handleFormClose"
-      @submit="handleFormSubmit"
-    />
-
+    <!-- 
+      修复：暂时将这个尚未创建的组件注释掉，以防止白屏错误。
+      <FormForm
+        :visible="isFormVisible"
+        :initial-data="editingForm"
+        @close="handleFormClose"
+        @submit="handleFormSubmit"
+      /> 
+    -->
   </div>
 </template>
 
 <script setup>
-
-// 未来可在此添加表单管理逻辑
-
 import { ref, onMounted } from 'vue';
 import { Plus } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { getForms, deleteForm, createForm, updateForm } from '../services/forms.service.js';
-import FormForm from '../components/FormForm.vue';
+// 注意：这些文件需要被创建才能使此组件正常工作
+// import { getForms, deleteForm, createForm, updateForm } from '../services/forms.service.js';
+// import FormForm from '../components/FormForm.vue';
 
 const loading = ref(true);
 const tableData = ref([]);
@@ -72,32 +66,30 @@ const error = ref(null);
 const isFormVisible = ref(false);
 const editingForm = ref(null);
 
-const fetchForms = async () => {
+// 模拟数据，因为后端尚未实现
+onMounted(() => {
   loading.value = true;
-  error.value = null;
-  try {
-    const res = await getForms();
-    if (res.data && res.data.success) {
-      tableData.value = res.data.data;
-    } else {
-      throw new Error(res.data.message || 'Failed to fetch');
-    }
-  } catch (err) {
-    console.error('Error fetching forms:', err);
-    error.value = err.message || 'Unknown error';
-  } finally {
-    loading.value = false;
-  }
+  setTimeout(() => {
+      tableData.value = [
+          { _id: '1', name: '模拟的联系表单', isEnabled: true, updatedAt: new Date().toISOString() },
+          { _id: '2', name: '模拟的产品垂询', isEnabled: false, updatedAt: new Date().toISOString() },
+      ];
+      loading.value = false;
+  }, 1000);
+});
+
+
+// 待实现的API调用
+const fetchForms = async () => {
+  ElMessage.info('获取表单功能待实现。');
 };
 
 const handleCreate = () => {
-  editingForm.value = { fields: [], isEnabled: true };
-  isFormVisible.value = true;
+  ElMessage.info('新建表单功能待实现。');
 };
 
 const handleEdit = (row) => {
-  editingForm.value = { ...row };
-  isFormVisible.value = true;
+   ElMessage.info('编辑表单功能待实现。');
 };
 
 const handleFormClose = () => {
@@ -106,49 +98,11 @@ const handleFormClose = () => {
 };
 
 const handleFormSubmit = async (data) => {
-  try {
-    let response;
-    if (data._id) {
-      response = await updateForm(data._id, data);
-    } else {
-      response = await createForm(data);
-    }
-    if (response.data && response.data.success) {
-      ElMessage.success(data._id ? '更新成功！' : '创建成功！');
-      handleFormClose();
-      fetchForms();
-    } else {
-      throw new Error(response.data.message || '操作失败');
-    }
-  } catch (err) {
-    console.error('Error submitting form:', err);
-    ElMessage.error(err.message || '提交时发生错误');
-  }
+  ElMessage.info('提交表单功能待实现。');
 };
 
 const handleDelete = (row) => {
-  ElMessageBox.confirm(
-    `您确定要删除表单 "${row.name}" 吗？此操作无法撤销。`,
-    '警告',
-    { confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning' }
-  )
-    .then(async () => {
-      try {
-        const response = await deleteForm(row._id);
-        if (response.data && response.data.success) {
-          ElMessage.success('删除成功！');
-          fetchForms();
-        } else {
-          throw new Error(response.data.message || '删除失败');
-        }
-      } catch (err) {
-        console.error('Error deleting form:', err);
-        ElMessage.error(err.message || '删除时发生错误');
-      }
-    })
-    .catch(() => {
-      ElMessage.info('已取消删除');
-    });
+   ElMessage.info('删除表单功能待实现。');
 };
 
 const formatDateTime = (isoString) => {
@@ -165,10 +119,6 @@ const formatDateTime = (isoString) => {
   });
 };
 
-onMounted(() => {
-  fetchForms();
-});
-
 </script>
 
 <style scoped>
@@ -180,10 +130,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
 }
-
-
 .error-alert {
   margin-bottom: 20px;
 }
-
 </style>
