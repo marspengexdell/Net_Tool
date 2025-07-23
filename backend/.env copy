@@ -1,0 +1,4 @@
+# .env 文件内容
+MONGO_URI=mongodb+srv://marspeng426:<db_password>@cluster0.ycjhzvp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+PORT=5001
+NODE_ENV=development
