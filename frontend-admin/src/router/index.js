@@ -4,12 +4,12 @@
  */
 import { createRouter, createWebHistory } from 'vue-router';
 
-// 导入所有页面组件
-import LayerManager from '../views/LayerManager.vue';
-import GlobalSettings from '../views/GlobalSettings.vue';
-import MenuManager from '../views/MenuManager.vue';
-import FormManager from '../views/FormManager.vue';
-import Login from '../views/Login.vue';
+// 动态导入页面组件以实现代码分割
+const LayerManager = () => import('../views/LayerManager.vue');
+const GlobalSettings = () => import('../views/GlobalSettings.vue');
+const MenuManager = () => import('../views/MenuManager.vue');
+const FormManager = () => import('../views/FormManager.vue');
+const Login = () => import('../views/Login.vue');
 
 // 定义路由规则
 const routes = [

@@ -6,9 +6,11 @@
     -->
     <LayoutFullWidthText v-if="layer.layout === 'full-width-text'" :layer="layer" />
     
-    <!-- 新增：当布局为 'image-left-text-right' 时，使用新的布局组件 -->
     <LayoutImageLeft v-else-if="layer.layout === 'image-left-text-right'" :layer="layer" />
     
+    <!-- 新增：当布局为 'three-column-cards' 时，使用新的布局组件 -->
+    <LayoutThreeColumnCards v-else-if="layer.layout === 'three-column-cards'" :layer="layer" />
+
     <!-- 
       未来可以添加更多布局组件
       <LayoutTextLeft v-else-if="layer.layout === 'text-left-image-right'" :layer="layer" />
@@ -25,7 +27,8 @@
 <script setup>
 // 导入我们已经创建的布局组件
 import LayoutFullWidthText from './layouts/LayoutFullWidthText.vue';
-import LayoutImageLeft from './layouts/LayoutImageLeft.vue'; // 新增导入
+import LayoutImageLeft from './layouts/LayoutImageLeft.vue';
+import LayoutThreeColumnCards from './layouts/LayoutThreeColumnCards.vue'; // 新增导入
 
 // 定义 props，接收父组件传递的 layer 数据
 defineProps({
