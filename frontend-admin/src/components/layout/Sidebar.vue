@@ -28,9 +28,10 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const route = useRoute()
-const activeRoute = route.path
+const activeRoute = computed(() => route.path)
 </script>
 
 <style scoped>
