@@ -72,7 +72,7 @@ const fetchPublicData = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await apiClient.get('/data');
+    const response = await apiClient.get('/public/data');
     if (response.data && response.data.success) {
       data.value = response.data.data;
     } else {
