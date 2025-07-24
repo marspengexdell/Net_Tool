@@ -1,74 +1,32 @@
 <template>
-  <!-- 使用 Element Plus 的布局容器 -->
   <el-container class="app-container">
-    <!-- 侧边栏 -->
     <el-aside width="200px" class="app-aside">
       <div class="logo">Layered CMS</div>
-
-      <Sidebar />
-
-      <!-- 导航菜单 -->
-      <el-menu
-        router
-        :default-active="activeMenu"
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        class="el-menu-vertical-demo"
-        text-color="#fff"
-      >
-        <el-menu-item index="/settings">
-          <el-icon><setting /></el-icon>
-          <span>全局设置</span>
-        </el-menu-item>
-        <el-menu-item index="/layers">
-          <el-icon><Grid /></el-icon>
-          <span>层级管理</span>
-        </el-menu-item>
-        <el-menu-item index="/menu">
-          <el-icon><List /></el-icon>
-          <span>菜单管理</span>
+      <el-menu :default-active="$route.path" class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" :router="true">
+        <el-menu-item v-for="route in menuRoutes" :key="route.path" :index="route.path">
+          <el-icon><component :is="route.meta.icon || 'Menu'" /></el-icon>
+          <span>{{ route.meta.title }}</span>
         </el-menu-item>
       </el-menu>
-
     </el-aside>
-
     <el-container>
-      <!-- 顶栏 -->
       <el-header class="app-header">
-        <div class="header-left">后台管理面板</div>
-        <div class="header-right">
-          <el-dropdown>
-            <span class="el-dropdown-link">
-              Admin<el-icon class="el-icon--right"><arrow-down /></el-icon>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>个人中心</el-dropdown-item>
-                <el-dropdown-item>退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
+        <div>后台管理面板</div>
       </el-header>
-
-      <!-- 主内容区 -->
       <el-main class="app-main">
-        <router-view />
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script setup>
-
-import Sidebar from './components/layout/Sidebar.vue'
-
 import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-const activeMenu = computed(() => route.path);
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const menuRoutes = computed(() =>
+  router.options.routes.filter(route => route.meta && route.meta.title && !route.meta.hideInMenu)
+);
 </script>
 
 <style>
@@ -108,12 +66,6 @@ html, body, #app {
   align-items: center;
   border-bottom: 1px solid #e6e6e6;
   background-color: #fff;
-}
-
-.el-dropdown-link {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
 }
 
 .app-main {
