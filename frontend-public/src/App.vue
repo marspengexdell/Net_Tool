@@ -33,22 +33,15 @@
       </header>
 
       <main class="site-main">
-        <!-- 动态渲染所有层级 -->
-        <!-- 这里是您“Layered Layout”魔法发生的地方 -->
-        <section v-for="layer in data.layers" :key="layer._id" class="layer-section">
-          <div class="layer-content-wrapper">
-            <!-- 
-              这里只是一个基础的渲染，
-              未来我们会根据 layer.layout 创建更复杂的动态组件来展示层叠效果。
-            -->
-            <h2>{{ layer.name }}</h2>
-            <div v-for="(block, index) in layer.contentBlocks" :key="index" class="content-block">
-              <p v-if="block.type === 'paragraph'">{{ block.value }}</p>
-              <h3 v-if="block.type === 'heading'" class="content-heading">{{ block.value }}</h3>
-              <img v-if="block.type === 'image'" :src="block.value" alt="Layer Image" class="content-image">
-            </div>
-          </div>
-        </section>
+        <!-- 
+          使用 v-for 循环渲染 DynamicLayer 组件，
+          将每个 layer 对象作为 prop 传递给它。
+        -->
+        <DynamicLayer
+          v-for="layer in data.layers"
+          :key="layer._id"
+          :layer="layer"
+        />
       </main>
 
       <footer class="site-footer">
@@ -60,8 +53,9 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-// 我们将在下一步创建 apiClient.js
 import apiClient from './services/apiClient'; 
+// 导入我们新创建的动态层级组件
+import DynamicLayer from './components/DynamicLayer.vue';
 
 const loading = ref(true);
 const error = ref(null);
@@ -72,7 +66,7 @@ const fetchPublicData = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await apiClient.get('/public/data');
+    const response = await apiClient.get('/data');
     if (response.data && response.data.success) {
       data.value = response.data.data;
     } else {
@@ -92,7 +86,6 @@ const dynamicStyles = computed(() => {
   
   const { fontFamily, primaryColor } = data.value.settings;
   
-  // 返回一个包含 CSS 变量的 style 块
   return `
     :root {
       --font-family-base: ${fontFamily || "'Inter', sans-serif"};
@@ -121,22 +114,6 @@ onMounted(() => {
   align-items: center;
   background: #ffffff;
   z-index: 9999;
-  text-align: center;
-}
-
-.error-overlay h2 {
-  color: #D32F2F;
-  margin-bottom: 1rem;
-}
-
-.error-overlay button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--color-primary);
-    background-color: var(--color-primary);
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
 .spinner {
@@ -159,26 +136,19 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 5%;
-  background: #fff;
   border-bottom: 1px solid #eaeaea;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
 }
 
 .logo-image {
   max-height: 40px;
 }
 .logo-text {
-  font-size: 1.5rem;
   font-weight: bold;
   color: var(--color-primary);
 }
 
 .site-nav ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   gap: 2rem;
 }
@@ -186,32 +156,6 @@ onMounted(() => {
 .site-nav a {
   text-decoration: none;
   color: #333;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.site-nav a:hover {
-  color: var(--color-primary);
-}
-
-.layer-section {
-  padding: 5rem 5%;
-}
-
-.layer-section:nth-child(even) {
-  background-color: #f7f7f7;
-}
-
-.layer-content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.content-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-top: 1rem;
 }
 
 .site-footer {
