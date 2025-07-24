@@ -11,7 +11,7 @@ import MenuItem from '../models/MenuItem.model.js';
 // @access  Public
 export const getPublicData = async (req, res) => {
   try {
-    // 使用 Promise.all 并行执行所有数据库查询
+    // 使用 Promise.all 并行执行所有数据库查询，以提高效率
     const [settings, layers, menuItems] = await Promise.all([
       // 查找唯一的设置文档，如果不存在则创建一个默认的
       Setting.findOneAndUpdate(

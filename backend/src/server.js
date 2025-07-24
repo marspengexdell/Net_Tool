@@ -7,16 +7,16 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
 
-// 导入路由文件
+// 导入所有路由文件
 import layersRoutes from './api/layers.routes.js';
-import settingsRoutes from './api/settings.routes.js'; // 新增：导入 settings 路由
-import formsRoutes from './api/forms.routes.js';
-// (未来可以导入更多路由)
+import settingsRoutes from './api/settings.routes.js';
 import menuRoutes from './api/menu.routes.js';
 import publicRoutes from './api/public.routes.js';
-import authRoutes from './api/auth.routes.js';
+import formsRoutes from './api/forms.routes.js';   // 新增
+import authRoutes from './api/auth.routes.js';     // 新增
 
-import { protect } from './middleware/auth.middleware.js';
+// 导入认证中间件 (假设您已创建此文件)
+// import { protect } from './middleware/auth.middleware.js';
 
 // --- 初始化 ---
 // 加载 .env 文件中的环境变量
@@ -36,21 +36,16 @@ app.use(cors());
 app.use(express.json());
 
 // --- API 路由 ---
+// 公开路由 (不需要认证)
+app.use('/api/public', publicRoutes);
 app.use('/api/auth', authRoutes);
 
-// 当请求路径以 /api/layers 开头时，使用 layersRoutes 处理
-app.use('/api/layers', protect, layersRoutes);
-// 新增：当请求路径以 /api/settings 开头时，使用 settingsRoutes 处理
-
-app.use('/api/settings', protect, settingsRoutes);
-
+// 受保护的管理后台路由 (未来可以启用 protect 中间件)
+// 示例: app.use('/api/layers', protect, layersRoutes);
+app.use('/api/layers', layersRoutes);
 app.use('/api/settings', settingsRoutes);
-// 表单相关路由
+app.use('/api/menu', menuRoutes);
 app.use('/api/forms', formsRoutes);
-
-// (未来可以挂载更多路由)
-app.use('/api/menu', protect, menuRoutes);
-app.use('/api/public', publicRoutes);
 
 
 // --- 错误处理中间件 (可选，但推荐) ---
