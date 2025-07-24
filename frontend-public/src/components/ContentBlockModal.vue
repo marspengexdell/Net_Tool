@@ -62,34 +62,46 @@ const props = defineProps({
 const emit = defineEmits(['close', 'save']);
 
 const formRef = ref(null);
-const form = ref({});
+const form = ref({
+  type: 'heading',
+  value: '',
+  link: '',
+});
 
 // 通过 initialData 是否有内容来判断是编辑还是新建模式
 const isEditMode = computed(() => !!props.initialData);
 
 // 表单验证规则
-const rules = {
+const rules = computed(() => ({
   type: [{ required: true, message: '请选择内容块类型', trigger: 'change' }],
   value: [{ required: true, message: '请输入内容', trigger: 'blur' }],
-  link: [{ required: true, message: '请输入按钮链接', trigger: 'blur' }],
-};
+  link: form.value.type === 'button' ? [{ required: true, message: '请输入按钮链接', trigger: 'blur' }] : [],
+}));
 
 // 监听 initialData 的变化，当父组件传入新数据时，更新表单
 watch(() => props.initialData, (newData) => {
+  console.log("New data received:", newData);  // Log the new data
   // 如果是新建，则使用默认值；如果是编辑，则使用传入的数据
   form.value = newData ? { ...newData } : { type: 'heading', value: '', link: '' };
+  console.log("Form after initialization:", form.value);  // Log the form object
 }, { immediate: true });
 
 const handleClose = () => {
+  console.log("Closing dialog...");
   emit('close');
 };
 
 const handleSave = async () => {
   if (!formRef.value) return;
+
+  // Log form data before validation
+  console.log("Form data before validation:", form.value);
+
   await formRef.value.validate((valid) => {
     if (valid) {
-      // 触发 save 事件，将表单数据传递给父组件
-      emit('save', form.value);
+      emit('save', form.value); // Trigger save event with form data
+    } else {
+      console.error("Form validation failed");
     }
   });
 };

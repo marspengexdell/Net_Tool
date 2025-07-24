@@ -7,7 +7,7 @@
           <el-button type="primary" :icon="Plus" @click="handleCreate">新建层级</el-button>
         </div>
       </template>
-      
+
       <el-alert
         v-if="error"
         :title="'数据加载失败: ' + error"
@@ -18,7 +18,11 @@
       />
 
       <el-table :data="tableData" style="width: 100%" v-loading="loading">
-        <el-table-column prop="name" label="层级名称" width="180" />
+        <el-table-column prop="name" label="层级名称" width="180">
+          <template #default="scope">
+            <span>{{ scope.row.name || '无名称' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="layout" label="布局类型" width="180" />
         <el-table-column prop="order" label="排序" width="100" sortable />
         <el-table-column label="状态" width="100">
@@ -29,7 +33,7 @@
           </template>
         </el-table-column>
         <el-table-column label="最后更新" width="200">
-           <template #default="scope">
+          <template #default="scope">
             {{ formatDateTime(scope.row.updatedAt) }}
           </template>
         </el-table-column>
@@ -43,7 +47,6 @@
       </el-table>
     </el-card>
 
-    <!-- 新增：层级表单弹窗 -->
     <layer-form
       :visible="isFormVisible"
       :initial-data="editingLayer"
@@ -51,6 +54,7 @@
       @submit="handleFormSubmit"
     />
     <layer-card
+      v-if="isEditorVisible"
       :visible="isEditorVisible"
       :layer="editingContentLayer"
       @close="handleEditorClose"
@@ -155,6 +159,7 @@ const fetchLayers = async () => {
     const response = await getLayers();
     if (response.data && response.data.success) {
       tableData.value = response.data.data;
+      console.log('Fetched data:', tableData.value); // <-- 请注意这里，用于调试
     } else {
       throw new Error(response.data.message || 'Failed to fetch data');
     }
@@ -168,11 +173,11 @@ const fetchLayers = async () => {
 
 const handleDelete = (row) => {
   ElMessageBox.confirm(
-    `您确定要删除层级 "${row.name}" 吗？此操作无法撤销。`, '警告',
+    `您确定要删除层级 "${row.name || '无名称'}" 吗？此操作无法撤销。`, '警告', // 防错处理
     { confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning' }
   ).then(async () => {
     try {
-      const response = await deleteLayer(row._id); 
+      const response = await deleteLayer(row._id);
       if (response.data && response.data.success) {
         ElMessage.success('删除成功！');
         fetchLayers();
