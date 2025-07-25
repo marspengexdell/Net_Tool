@@ -1,26 +1,22 @@
 <template>
-  <!-- 这个 style 标签会根据后端数据动态注入 CSS 变量 -->
   <component :is="'style'">{{ dynamicStyles }}</component>
 
   <div id="page-wrapper">
-    <!-- 全屏加载指示器 -->
     <div v-if="loading" class="loading-overlay">
       <div class="spinner"></div>
       <p>正在加载网站...</p>
     </div>
 
-    <!-- 全屏错误信息 -->
     <div v-if="error" class="error-overlay">
       <h2>加载网站数据时出错</h2>
       <p>{{ error }}</p>
       <button @click="fetchPublicData">重试</button>
     </div>
 
-    <!-- 网站实际内容 -->
     <template v-if="data">
       <header class="site-header">
         <div class="logo-container">
-          <img v-if="data.settings.logoUrl" :src="data.settings.logoUrl" alt="Website Logo" class="logo-image">
+          <img v-if="data.settings && data.settings.logoUrl" :src="data.settings.logoUrl" alt="Website Logo" class="logo-image">
           <span v-else class="logo-text">My Awesome Site</span>
         </div>
         <nav class="site-nav">
@@ -33,10 +29,6 @@
       </header>
 
       <main class="site-main">
-        <!-- 
-          使用 v-for 循环渲染 DynamicLayer 组件，
-          将每个 layer 对象作为 prop 传递给它。
-        -->
         <DynamicLayer
           v-for="layer in data.layers"
           :key="layer._id"
@@ -59,16 +51,18 @@ import DynamicLayer from './components/DynamicLayer.vue';
 
 const loading = ref(true);
 const error = ref(null);
-const data = ref(null);
+const data = ref(null); // 存储从后端获取的所有公共数据
 
 // 获取所有公共数据的方法
 const fetchPublicData = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await apiClient.get('/data');
+    // *** 关键修改：移除 /public 前缀，因为 apiClient.baseURL 已经包含了它 ***
+    const response = await apiClient.get('/data'); // 这里是修改过的
     if (response.data && response.data.success) {
-      data.value = response.data.data;
+      data.value = response.data.data; // 这里的 data.data 应该包含 layers, settings, menuItems 等
+      console.log('Fetched public site data:', data.value); // 添加日志，确认获取到的数据结构
     } else {
       throw new Error(response.data.message || '获取公共数据失败。');
     }

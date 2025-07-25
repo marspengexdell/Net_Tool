@@ -2,19 +2,20 @@
   <section class="layer-section">
     <!-- 
       使用 v-if / v-else-if 来根据 layer.layout 的值选择渲染哪个组件。
-      这是实现动态布局的核心。
     -->
     <LayoutFullWidthText v-if="layer.layout === 'full-width-text'" :layer="layer" />
     
-    <LayoutImageLeft v-else-if="layer.layout === 'image-left-text-right'" :layer="layer" />
+    <!-- 新增：处理 'full-width-image' 布局 -->
+    <LayoutFullWidthImage v-else-if="layer.layout === 'full-width-image'" :layer="layer" />
     
-    <!-- 新增：当布局为 'three-column-cards' 时，使用新的布局组件 -->
-    <LayoutThreeColumnCards v-else-if="layer.layout === 'three-column-cards'" :layer="layer" />
+    <LayoutTextLeft v-else-if="layer.layout === 'text-left-image-right'" :layer="layer" />
 
-    <!-- 
-      未来可以添加更多布局组件
-      <LayoutTextLeft v-else-if="layer.layout === 'text-left-image-right'" :layer="layer" />
-    -->
+    <LayoutImageLeft v-else-if="layer.layout === 'image-left-text-right'" :layer="layer" />
+
+    <!-- 新增：处理 'two-column-text' 布局 -->
+    <LayoutTwoColumnText v-else-if="layer.layout === 'two-column-text'" :layer="layer" />
+    
+    <LayoutThreeColumnCards v-else-if="layer.layout === 'three-column-cards'" :layer="layer" />
     
     <!-- 为尚未实现的布局提供一个清晰的提示 -->
     <div v-else class="unimplemented-layout">
@@ -25,12 +26,15 @@
 </template>
 
 <script setup>
-// 导入我们已经创建的布局组件
+// 导入所有布局组件
 import LayoutFullWidthText from './layouts/LayoutFullWidthText.vue';
+import LayoutFullWidthImage from './layouts/LayoutFullWidthImage.vue'; // 新增
+import LayoutTextLeft from './layouts/LayoutTextLeft.vue';
 import LayoutImageLeft from './layouts/LayoutImageLeft.vue';
-import LayoutThreeColumnCards from './layouts/LayoutThreeColumnCards.vue'; // 新增导入
+import LayoutTwoColumnText from './layouts/LayoutTwoColumnText.vue'; // 新增
+import LayoutThreeColumnCards from './layouts/LayoutThreeColumnCards.vue';
 
-// 定义 props，接收父组件传递的 layer 数据
+// 定义 props
 defineProps({
   layer: {
     type: Object,
@@ -42,8 +46,14 @@ defineProps({
 <style scoped>
 .layer-section {
   padding: 5rem 5%;
-  position: relative; /* 为未来的层叠效果做准备 */
-  overflow: hidden; /* 防止内部绝对定位的元素溢出 */
+  position: relative;
+  overflow: hidden;
+}
+
+/* 针对全宽图片布局，移除该 section 的左右内边距 */
+.layer-section:has(.layout-full-width-image) {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .layer-section:nth-child(even) {
