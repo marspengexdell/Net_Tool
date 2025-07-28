@@ -5,6 +5,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
 import connectDB from './config/db.js';
 
 // 导入所有路由文件
@@ -12,43 +13,43 @@ import layersRoutes from './api/layers.routes.js';
 import settingsRoutes from './api/settings.routes.js';
 import menuRoutes from './api/menu.routes.js';
 import publicRoutes from './api/public.routes.js';
-import formsRoutes from './api/forms.routes.js';   // 新增
-import authRoutes from './api/auth.routes.js';     // 新增
-
-// 导入认证中间件 (假设您已创建此文件)
-// import { protect } from './middleware/auth.middleware.js';
+import formsRoutes from './api/forms.routes.js';
+import authRoutes from './api/auth.routes.js';
+import uploadRoutes from './api/upload.routes.js';
 
 // --- 初始化 ---
-// 加载 .env 文件中的环境变量
 dotenv.config();
-
-// 初始化 Express 应用
 const app = express();
 
 // --- 数据库连接 ---
 connectDB();
 
 // --- 中间件 (Middleware) ---
-// 启用 CORS，允许跨域请求
-app.use(cors());
+// 修正：使用更详细的 CORS 配置以允许文件上传
+app.use(cors({
+  origin: '*', // 允许所有来源 (在开发中可以，生产环境需要更严格的设置)
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 允许所有常见的 HTTP 方法
+}));
 
-// 解析 JSON 格式的请求体
 app.use(express.json());
 
 // --- API 路由 ---
-// 公开路由 (不需要认证)
 app.use('/api/public', publicRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/upload', uploadRoutes);
 
-// 受保护的管理后台路由 (未来可以启用 protect 中间件)
-// 示例: app.use('/api/layers', protect, layersRoutes);
+// 受保护的管理后台路由
 app.use('/api/layers', layersRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/forms', formsRoutes);
 
+// --- 静态文件服务 ---
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
-// --- 错误处理中间件 (可选，但推荐) ---
+
+// --- 错误处理中间件 ---
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send({ success: false, message: 'Something broke!' });
@@ -56,9 +57,7 @@ app.use((err, req, res, next) => {
 
 
 // --- 启动服务器 ---
-// 从环境变量中获取端口号，如果没有则默认为 5000
-const PORT = process.env.PORT || 5000;
-
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });

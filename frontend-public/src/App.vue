@@ -17,7 +17,7 @@
       <header class="site-header">
         <div class="logo-container">
           <img v-if="data.settings && data.settings.logoUrl" :src="data.settings.logoUrl" alt="Website Logo" class="logo-image">
-          <span v-else class="logo-text">My Awesome Site</span>
+          <span v-else class="logo-text">欢迎</span>
         </div>
         <nav class="site-nav">
           <ul>
